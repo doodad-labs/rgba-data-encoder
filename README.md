@@ -6,7 +6,7 @@ The encoding is completely lossless - files can be perfectly reconstructed from 
 
 Some example encodings are included:  
 - [doom.pdf](https://github.com/ading2210/doompdf) encodes to a 4.8MB PNG (original 6.2MB)  
-- A [Bad Apple video](https://dn720401.ca.archive.org/0/items/TouhouBadApple/Touhou%20-%20Bad%20Apple.mp4) frame encodes to a 37.8MB PNG (original 21.7MB)  
+- THe [Bad Apple video](https://dn720401.ca.archive.org/0/items/TouhouBadApple/Touhou%20-%20Bad%20Apple.mp4) encodes to a 37.8MB PNG (original 21.7MB)  
 
 While this doesn't compress data, it provides an interesting way to represent any file as an image. Potential uses include archival storage, steganography, or simply as a novelty encoding method. The simple byte-level packing ensures reliable round-trips with no data loss.  
 
