@@ -1,28 +1,22 @@
 import { PNG } from 'pngjs';
 import fs from 'fs';
-import { hexmapInverse } from './utils';
 
 const png = PNG.sync.read(fs.readFileSync('output.png'));
-const packedBytes = [];
+let hex = '';
 
-// Extract packed bytes from PNG
-for (let i = 0; i < png.data.length; i += 4) {
-    packedBytes.push(png.data[i]);     // R
-    packedBytes.push(png.data[i + 1]); // G
-    packedBytes.push(png.data[i + 2]); // B
-    packedBytes.push(png.data[i + 3]); // A
+for (let y = 0; y < png.height; y++) {
+    for (let x = 0; x < png.width; x++) {
+        const idx = (y * png.width + x) * 4;
+
+        // Read each channel and convert back to 2-char hex
+        hex += png.data[idx].toString(16).padStart(2, '0');      // R
+        hex += png.data[idx + 1].toString(16).padStart(2, '0');  // G
+        hex += png.data[idx + 2].toString(16).padStart(2, '0');  // B
+        hex += png.data[idx + 3].toString(16).padStart(2, '0');  // A
+    }
 }
 
-// Unpack each byte into two hex digits
-const hexDigits = [];
-for (const byte of packedBytes) {
-    const first = (byte >> 4) & 0x0F;  // High 4 bits (0-15)
-    const second = byte & 0x0F;        // Low 4 bits (0-15)
-    hexDigits.push(hexmapInverse[first], hexmapInverse[second]);
-}
-
-// Convert back to original data
-const hexString = hexDigits.join('');
-const originalData = Buffer.from(hexString, 'hex').toString('utf8');
-
-console.log(originalData);
+// Trim padding and convert to original data
+const decodedData = Buffer.from(hex.replace(/0+$/, ''), 'hex').toString('utf8');
+const originalData = fs.readFileSync('input.txt', 'utf8').trim();
+console.log(originalData === decodedData ? 'Decoded data matches original!' : 'Decoded data does not match original.');

@@ -1,44 +1,32 @@
 import { PNG } from 'pngjs';
 import fs from 'fs';
-import { hexmap } from './utils'; // Ensure hexmap['0']=0, hexmap['f']=15
 
 const data = fs.readFileSync('input.txt', 'utf8').trim();
-const hex = Buffer.from(data).toString('hex').split('');
+const hex = Buffer.from(data).toString('hex');
 
-// Pad hex to even length if needed
-if (hex.length % 2 !== 0) hex.push('0');
+// Pad hex to be divisible by 8 (1 pixel = 8 hex chars)
+const paddedHex = hex.padEnd(Math.ceil(hex.length / 8) * 8, '0');
 
-// Combine every two hex digits into one byte (0-255)
-const packedBytes = [];
-for (let i = 0; i < hex.length; i += 2) {
-    const first = hexmap[hex[i]];     // 0-15
-    const second = hexmap[hex[i + 1]]; // 0-15
-    const combined = (first << 4) | second; // Pack into 0-255
-    packedBytes.push(combined);
-}
-
-// Calculate image dimensions (4 bytes per pixel: R, G, B, A)
-const PIXELS_PER_LINE = 500;
-const totalPixels = Math.ceil(packedBytes.length / 4);
-const lines = Math.ceil(totalPixels / PIXELS_PER_LINE);
-const width = Math.min(totalPixels, PIXELS_PER_LINE);
-const height = lines;
-
+// Create PNG
+const width = Math.ceil(Math.sqrt(paddedHex.length / 8));
+const height = Math.ceil((paddedHex.length / 8) / width);
 const png = new PNG({ width, height });
 
-// Fill PNG with packed data
 for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
-        const pixelIdx = (y * width + x) * 4; // RGBA offset
-        const byteIdx = y * width * 4 + x * 4;
+        const hexStartIdx = (y * width + x) * 8;
+        const hexChunk = paddedHex.substr(hexStartIdx, 8).padEnd(8, '0');
+        const idx = (y * width + x) * 4;
 
-        // Set RGBA values (each byte holds 2 hex digits)
-        png.data[pixelIdx]     = packedBytes[byteIdx]     || 0; // R
-        png.data[pixelIdx + 1] = packedBytes[byteIdx + 1] || 0; // G
-        png.data[pixelIdx + 2] = packedBytes[byteIdx + 2] || 0; // B
-        png.data[pixelIdx + 3] = packedBytes[byteIdx + 3] || 0; // A
+        // Split into 4 pairs of hex chars (e.g., "1a", "2b", "3c", "4d")
+        const pairs = hexChunk.match(/.{2}/g) || ['00', '00', '00', '00'];
+
+        // Store each pair in a channel (R, G, B, A)
+        png.data[idx] = parseInt(pairs[0], 16);     // R
+        png.data[idx + 1] = parseInt(pairs[1], 16); // G
+        png.data[idx + 2] = parseInt(pairs[2], 16); // B
+        png.data[idx + 3] = parseInt(pairs[3], 16); // A
     }
 }
 
-// Save to file
 png.pack().pipe(fs.createWriteStream('output.png'));
