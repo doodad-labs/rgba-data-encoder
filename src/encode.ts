@@ -1,7 +1,7 @@
 import { PNG } from 'pngjs';
 import fs from 'fs';
 
-const data = fs.readFileSync('./test/doom.pdf', 'utf8').trim();
+const data = fs.readFileSync('./test/bad-apple.mp4', 'utf8').trim();
 const hex = Buffer.from(data).toString('hex');
 
 // Pad hex to be divisible by 8 (1 pixel = 8 hex chars)
@@ -29,4 +29,4 @@ for (let y = 0; y < height; y++) {
     }
 }
 
-png.pack().pipe(fs.createWriteStream('./test/doom.pdf.png'));
+png.pack().pipe(fs.createWriteStream('./test/bad-apple.mp4.png'));

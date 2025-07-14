@@ -1,7 +1,7 @@
 import { PNG } from 'pngjs';
 import fs from 'fs';
 
-const png = PNG.sync.read(fs.readFileSync('./test/doom.pdf.png'));
+const png = PNG.sync.read(fs.readFileSync('./test/bad-apple.mp4.png'));
 let hex = '';
 
 for (let y = 0; y < png.height; y++) {
@@ -18,5 +18,5 @@ for (let y = 0; y < png.height; y++) {
 
 // Trim padding and convert to original data
 const decodedData = Buffer.from(hex.replace(/0+$/, ''), 'hex').toString('utf8');
-const originalData = fs.readFileSync('./test/doom.pdf', 'utf8').trim();
+const originalData = fs.readFileSync('./test/bad-apple.mp4', 'utf8').trim();
 console.log(originalData === decodedData ? 'Decoded data matches original!' : 'Decoded data does not match original.');
