@@ -5,8 +5,8 @@ This project encodes arbitrary data into PNG images by packing raw bytes into RG
 The encoding is completely lossless - files can be perfectly reconstructed from the generated images. However, this is not a compression algorithm. For already compressed files like PDFs or videos, the PNG output will typically be slightly larger than the original. For uncompressed text files, the size remains about the same.  
 
 Some example encodings are included:  
-- [doom.pdf](https://github.com/ading2210/doompdf) encodes to a 4.8MB PNG (original 6.2MB)  
-- THe [Bad Apple video](https://dn720401.ca.archive.org/0/items/TouhouBadApple/Touhou%20-%20Bad%20Apple.mp4) encodes to a 37.8MB PNG (original 21.7MB)  
+- [doom.pdf](https://github.com/ading2210/doompdf) encodes to 4.8MB (original 6.2MB)  
+- The [Bad Apple video](https://dn720401.ca.archive.org/0/items/TouhouBadApple/Touhou%20-%20Bad%20Apple.mp4) encodes to 37.8MB (original 21.7MB)  
 
 While this doesn't compress data, it provides an interesting way to represent any file as an image. Potential uses include archival storage, steganography, or simply as a novelty encoding method. The simple byte-level packing ensures reliable round-trips with no data loss.  
 
